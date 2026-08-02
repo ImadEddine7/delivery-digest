@@ -136,7 +136,34 @@ export function DigestProvider({ children }: { children: ReactNode }) {
   const clearError = useCallback(() => setError(null), [])
 
   useEffect(() => {
-    loadPeriod(period)
+    async function init() {
+      const p = currentPeriod()
+      // Try current month first
+      const draft = localStorage.getItem(`delivery-digest:draft:${p}`)
+      if (draft || isGitHubMode()) {
+        loadPeriod(p)
+        return
+      }
+      const data = await fetchFromRepo(p)
+      if (data) {
+        setDigestRaw(data)
+        setPeriodRaw(p)
+        return
+      }
+      // Fallback: try previous month
+      const [y, m] = p.split('-').map(Number)
+      const pm = m === 1 ? 12 : m - 1
+      const py = m === 1 ? y - 1 : y
+      const prev = `${py}-${String(pm).padStart(2, '0')}`
+      const prevData = await fetchFromRepo(prev)
+      if (prevData) {
+        setDigestRaw(prevData)
+        setPeriodRaw(prev)
+        return
+      }
+      loadPeriod(p)
+    }
+    init()
   }, [])
 
   return (
