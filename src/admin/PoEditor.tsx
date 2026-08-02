@@ -48,7 +48,7 @@ export function PoEditor() {
         </p>
         {poMismatch && (
           <p className="mt-1 text-sm font-medium text-warning">
-            ⚠ Écart : le total PO demandé ({formatAmount(totalPo, digest.meta.unit)}) ne correspond pas au CA ({formatAmount(totalCa, digest.meta.unit)})
+            ⚠ Écart de {formatAmount(totalPo - totalCa, digest.meta.unit)} — PO demandé ({formatAmount(totalPo, digest.meta.unit)}) ≠ CA ({formatAmount(totalCa, digest.meta.unit)})
           </p>
         )}
       </div>
@@ -68,7 +68,7 @@ export function PoEditor() {
                 <span className="text-xs text-slate">
                   CA : {formatAmount(project.revenue, digest.meta.unit)}
                   {' '} — PO total : {formatAmount(projectPoTotal, digest.meta.unit)}
-                  {projectMismatch && <span className="ml-2 text-warning">⚠ écart</span>}
+                  {projectMismatch && <span className="ml-2 text-warning">⚠ écart {formatAmount(projectPoTotal - project.revenue, digest.meta.unit)}</span>}
                 </span>
               </div>
               <button onClick={() => addPoLine(project.id)} className="btn-secondary text-xs">
