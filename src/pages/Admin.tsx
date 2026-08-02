@@ -6,6 +6,7 @@ import { RevenueEditor } from '@/admin/RevenueEditor'
 import { PoEditor } from '@/admin/PoEditor'
 import { MessagesEditor } from '@/admin/MessagesEditor'
 import { PlanningEditor } from '@/admin/PlanningEditor'
+import { HeadcountEditor } from '@/admin/HeadcountEditor'
 import { ExcelImport } from '@/admin/ExcelImport'
 import { SettingsEditor } from '@/admin/SettingsEditor'
 import { PublishPanel } from '@/admin/PublishPanel'
@@ -15,8 +16,9 @@ import { OffshoreRatio } from '@/blocks/OffshoreRatio'
 import { PoCoverage } from '@/blocks/PoCoverage'
 import { KeyMessages } from '@/blocks/KeyMessages'
 import { Planning } from '@/blocks/Planning'
+import { Headcount } from '@/blocks/Headcount'
 
-type Tab = 'revenue' | 'po' | 'messages' | 'planning' | 'import' | 'settings' | 'publish'
+type Tab = 'revenue' | 'po' | 'headcount' | 'messages' | 'planning' | 'import' | 'settings' | 'publish'
 
 export function AdminPage() {
   const { digest, period, setPeriod, dirty, saving, lastSaved, saveToGitHub, updateDigest, githubMode, error, clearError } = useDigest()
@@ -26,6 +28,7 @@ export function AdminPage() {
   const tabs: { key: Tab; label: string }[] = [
     { key: 'revenue', label: t.admin.nav.revenue },
     { key: 'po', label: t.admin.nav.po },
+    { key: 'headcount', label: 'Effectifs' },
     { key: 'messages', label: t.admin.nav.messages },
     { key: 'planning', label: t.admin.nav.planning },
     { key: 'import', label: t.admin.nav.import },
@@ -60,6 +63,7 @@ export function AdminPage() {
           <Revenue digest={digest} />
           <OffshoreRatio digest={digest} />
           <PoCoverage digest={digest} />
+          <Headcount digest={digest} />
           <KeyMessages digest={digest} />
           <Planning digest={digest} />
         </div>
@@ -135,6 +139,7 @@ export function AdminPage() {
 
         {tab === 'revenue' && <RevenueEditor />}
         {tab === 'po' && <PoEditor />}
+        {tab === 'headcount' && <HeadcountEditor />}
         {tab === 'messages' && <MessagesEditor />}
         {tab === 'planning' && <PlanningEditor />}
         {tab === 'import' && <ExcelImport />}

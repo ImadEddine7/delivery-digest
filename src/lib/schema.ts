@@ -67,6 +67,11 @@ export const PlanningSchema = z.object({
   rows: z.array(PlanningRowSchema).default([]),
 })
 
+export const HeadcountEntrySchema = z.object({
+  month: z.string(),
+  count: z.number(),
+})
+
 export const SettingsSchema = z.object({
   coverageThresholds: z.object({
     warning: z.number().default(80),
@@ -91,6 +96,7 @@ export const DigestSchema = z.object({
   projects: z.array(ProjectSchema).default([]),
   purchaseOrders: z.array(PurchaseOrderSchema).default([]),
   keyMessages: z.array(KeyMessageSchema).default([]),
+  headcount: z.array(HeadcountEntrySchema).default([]),
   planning: PlanningSchema.default({ startMonth: '', endMonth: '', rows: [] }),
   settings: SettingsSchema.default({}),
 })
@@ -106,6 +112,7 @@ export type Settings = z.infer<typeof SettingsSchema>
 export type DigestMeta = z.infer<typeof MetaSchema>
 export type Digest = z.infer<typeof DigestSchema>
 export type Image = z.infer<typeof ImageSchema>
+export type HeadcountEntry = z.infer<typeof HeadcountEntrySchema>
 
 export const IndexSchema = z.object({
   periods: z.array(z.object({

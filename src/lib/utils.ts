@@ -74,6 +74,7 @@ export function createEmptyDigest(period: string): import('./schema').Digest {
     projects: [],
     purchaseOrders: [],
     keyMessages: [],
+    headcount: [],
     planning: { startMonth: `${y}-01`, endMonth: `${y}-12`, rows: [] },
     settings: { coverageThresholds: { warning: 80, healthy: 95 }, palette: ['#2F6F6B', '#B4472F', '#4A5A8A', '#C08A2E', '#6B7A5A'] },
   }

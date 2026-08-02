@@ -49,6 +49,15 @@
       "date": "2026-07-30"
     }
   ],
+  "headcount": [
+    { "month": "2026-01", "count": 32 },
+    { "month": "2026-02", "count": 34 },
+    { "month": "2026-03", "count": 36 },
+    { "month": "2026-04", "count": 38 },
+    { "month": "2026-05", "count": 40 },
+    { "month": "2026-06", "count": 42 },
+    { "month": "2026-07", "count": 45 }
+  ],
   "planning": {
     "startMonth": "2026-01",
     "endMonth": "2026-12",
