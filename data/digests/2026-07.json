@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "period": "2026-07",
+    "title": "Data Factory — Delivery Digest",
+    "subtitle": "Juillet 2026",
+    "publishedAt": "2026-08-02T10:00:00Z",
+    "author": "",
+    "currency": "EUR",
+    "unit": "k",
+    "status": "published"
+  },
+  "projects": [
+    { "id": "prj-001", "name": "Procurement Analytics", "program": "GET", "active": true, "revenue": 420.5, "offshorePct": 60, "comment": "" },
+    { "id": "prj-002", "name": "Energy Trading Platform", "program": "GET", "active": true, "revenue": 310.0, "offshorePct": 45, "comment": "" },
+    { "id": "prj-003", "name": "HR Data Lake", "program": "DRH", "active": true, "revenue": 180.0, "offshorePct": 70, "comment": "" },
+    { "id": "prj-004", "name": "Carbon Reporting", "program": "RSE", "active": true, "revenue": 95.0, "offshorePct": 30, "comment": "" },
+    { "id": "prj-005", "name": "Supply Chain Dashboard", "program": "GET", "active": true, "revenue": 250.0, "offshorePct": 55, "comment": "" }
+  ],
+  "purchaseOrders": [
+    { "projectId": "prj-001", "label": "", "poRequested": 500, "delivered": 430, "poReceived": 420 },
+    { "projectId": "prj-002", "label": "", "poRequested": 350, "delivered": 310, "poReceived": 280 },
+    { "projectId": "prj-003", "label": "", "poRequested": 200, "delivered": 185, "poReceived": 180 },
+    { "projectId": "prj-004", "label": "", "poRequested": 100, "delivered": 95, "poReceived": 60 },
+    { "projectId": "prj-005", "label": "", "poRequested": 280, "delivered": 250, "poReceived": 250 }
+  ],
+  "keyMessages": [
+    {
+      "id": "msg-1",
+      "order": 1,
+      "title": "Migration Databricks — phase 2 lancée",
+      "body": "Le kick-off de la phase 2 a eu lieu le 18 juillet. Les équipes offshore et onshore sont mobilisées pour une livraison prévue en **octobre 2026**.",
+      "tag": "Delivery",
+      "date": "2026-07-18"
+    },
+    {
+      "id": "msg-2",
+      "order": 2,
+      "title": "Nouveau contrat Supply Chain signé",
+      "body": "Extension du périmètre Supply Chain Dashboard avec un volet **prédictif**. Budget additionnel de 120 k€ sur S2 2026.",
+      "tag": "Commercial",
+      "date": "2026-07-25"
+    },
+    {
+      "id": "msg-3",
+      "order": 3,
+      "title": "Risque PO Carbon Reporting",
+      "body": "Couverture PO à **63%** — le PO complémentaire est en attente de signature côté client. Relance effectuée.",
+      "tag": "Alerte",
+      "date": "2026-07-30"
+    }
+  ],
+  "planning": {
+    "startMonth": "2026-01",
+    "endMonth": "2026-12",
+    "rows": [
+      {
+        "id": "row-1", "label": "Procurement Analytics", "type": "row", "indent": 0,
+        "bars": [
+          { "id": "bar-1", "label": "Build", "start": "2026-01", "end": "2026-05", "color": "#2F6F6B", "progress": 100, "style": "solid" },
+          { "id": "bar-2", "label": "Run", "start": "2026-06", "end": "2026-12", "color": "#4A5A8A", "progress": 30, "style": "solid" }
+        ],
+        "milestones": [
+          { "id": "ms-1", "month": "2026-05", "label": "Go-live", "color": "#B4472F" }
+        ]
+      },
+      {
+        "id": "row-2", "label": "Energy Trading Platform", "type": "row", "indent": 0,
+        "bars": [
+          { "id": "bar-3", "label": "Phase 1", "start": "2026-02", "end": "2026-07", "color": "#2F6F6B", "progress": 85, "style": "solid" },
+          { "id": "bar-4", "label": "Phase 2", "start": "2026-08", "end": "2026-11", "color": "#C08A2E", "style": "hatched" }
+        ],
+        "milestones": []
+      },
+      {
+        "id": "row-3", "label": "HR Data Lake", "type": "row", "indent": 0,
+        "bars": [
+          { "id": "bar-5", "label": "Migration", "start": "2026-03", "end": "2026-09", "color": "#6B7A5A", "progress": 55, "style": "solid" }
+        ],
+        "milestones": [
+          { "id": "ms-2", "month": "2026-09", "label": "MEP", "color": "#B4472F" }
+        ]
+      },
+      {
+        "id": "row-4", "label": "Carbon Reporting", "type": "row", "indent": 0,
+        "bars": [
+          { "id": "bar-6", "label": "Développement", "start": "2026-04", "end": "2026-08", "color": "#4A5A8A", "progress": 70, "style": "solid" }
+        ],
+        "milestones": []
+      },
+      {
+        "id": "row-5", "label": "Supply Chain Dashboard", "type": "row", "indent": 0,
+        "bars": [
+          { "id": "bar-7", "label": "V1", "start": "2026-01", "end": "2026-04", "color": "#2F6F6B", "progress": 100, "style": "solid" },
+          { "id": "bar-8", "label": "V2 Prédictif", "start": "2026-07", "end": "2026-12", "color": "#C08A2E", "progress": 10, "style": "solid" }
+        ],
+        "milestones": [
+          { "id": "ms-3", "month": "2026-04", "label": "V1 Live", "color": "#2F6F6B" }
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "coverageThresholds": { "warning": 80, "healthy": 95 },
+    "palette": ["#2F6F6B", "#B4472F", "#4A5A8A", "#C08A2E", "#6B7A5A"]
+  }
+}
