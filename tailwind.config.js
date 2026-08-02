@@ -4,14 +4,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: '#1a1a2e',
-        slate: '#4a4e69',
-        mist: '#f0f1f5',
-        accent: '#2f6f6b',
-        'accent-light': '#e8f4f3',
-        danger: '#b4472f',
-        warning: '#c08a2e',
-        success: '#2f6f6b',
+        ink: '#0f0f0f',
+        slate: '#6b7280',
+        mist: '#fafafa',
+        accent: '#c9a55c',
+        'accent-light': '#fdf8ef',
+        danger: '#dc2626',
+        warning: '#f59e0b',
+        success: '#10b981',
+        surface: '#ffffff',
+        'surface-dark': '#111111',
+        gold: '#c9a55c',
+        'gold-light': '#e8d5a3',
       },
       fontFamily: {
         display: ['Inter', 'system-ui', 'sans-serif'],
@@ -20,6 +24,14 @@ export default {
       },
       fontVariantNumeric: {
         tabular: 'tabular-nums',
+      },
+      borderRadius: {
+        xl: '1rem',
+        '2xl': '1.5rem',
+      },
+      boxShadow: {
+        card: '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)',
+        'card-hover': '0 4px 16px rgba(0,0,0,0.08)',
       },
     },
   },

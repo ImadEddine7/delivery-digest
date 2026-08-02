@@ -15,17 +15,17 @@ function Nav() {
   ]
 
   return (
-    <nav className="sticky top-0 z-40 border-b border-slate/10 bg-white/95 backdrop-blur no-print">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        <Link to="/" className="text-sm font-bold text-accent">{t.app.title}</Link>
+    <nav className="sticky top-0 z-40 border-b border-black/5 bg-white/80 backdrop-blur-lg no-print">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <Link to="/" className="text-sm font-bold tracking-tight text-ink">{t.app.title}</Link>
         <div className="flex gap-1">
           {links.map(link => (
             <Link
               key={link.to}
               to={link.to}
               className={cn(
-                'rounded-md px-3 py-1.5 text-sm transition-colors',
-                pathname === link.to ? 'bg-accent text-white' : 'text-slate hover:bg-mist'
+                'rounded-lg px-3.5 py-1.5 text-sm font-medium transition-all',
+                pathname === link.to ? 'bg-ink text-white' : 'text-slate hover:text-ink'
               )}
             >
               {link.label}

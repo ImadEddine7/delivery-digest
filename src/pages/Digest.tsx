@@ -17,11 +17,24 @@ export function DigestPage() {
   }, [period, loadPeriod])
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-      <HeaderStrip digest={digest} />
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold tracking-tight text-ink">{digest.meta.title}</h1>
+        <p className="mt-1 text-lg text-slate">{digest.meta.subtitle}</p>
+        {digest.meta.publishedAt && (
+          <p className="mt-1 text-sm text-slate/50">
+            Publié le {new Date(digest.meta.publishedAt).toLocaleDateString('fr-FR')}
+          </p>
+        )}
+      </div>
+      <div className="mb-10 grid gap-6 lg:grid-cols-[1fr_1.2fr]">
+        <HeaderStrip digest={digest} />
+        <div className="section-card">
+          <Headcount digest={digest} />
+        </div>
+      </div>
       <Revenue digest={digest} />
       <PoCoverage digest={digest} />
-      <Headcount digest={digest} />
       <KeyMessages digest={digest} />
       <Planning digest={digest} />
     </div>

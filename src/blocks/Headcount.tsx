@@ -22,19 +22,17 @@ export function Headcount({ digest }: { digest: Digest }) {
   const barGap = data.length > 0 ? innerW / data.length : 0
 
   return (
-    <section className="mb-10">
-      <h2 className="mb-4 text-xl font-bold text-ink">Effectifs</h2>
-      <div className="mb-4 flex flex-wrap items-baseline gap-6">
+    <div>
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate">Effectifs</h2>
+      <div className="mb-4 flex flex-wrap items-baseline gap-4">
         <div>
           <span className="text-3xl font-bold text-ink">{lastTotal}</span>
-          <span className="ml-2 text-sm text-slate">personnes</span>
+          <span className="ml-1 text-xs text-slate">pers.</span>
         </div>
-        <div className="text-sm">
-          <span className="font-medium text-accent">{lastEntry.offshore} offshore</span>
-          <span className="mx-2 text-slate/40">|</span>
+        <div className="text-xs">
+          <span className="font-semibold text-gold">{lastEntry.offshore} offshore</span>
+          <span className="mx-1.5 text-slate/30">·</span>
           <span className="font-medium text-slate">{lastEntry.onshore} onshore</span>
-          <span className="mx-2 text-slate/40">|</span>
-          <span className="font-medium text-ink">{lastRatio}% offshore</span>
         </div>
       </div>
 
@@ -66,8 +64,8 @@ export function Headcount({ digest }: { digest: Digest }) {
                 y={padding.top + innerH - onshoreH - offshoreH}
                 width={barWidth}
                 height={onshoreH}
-                fill="#94a3b8"
-                rx="2"
+                fill="#e5e7eb"
+                rx="3"
               />
               {/* Offshore (top) */}
               <rect
@@ -75,8 +73,8 @@ export function Headcount({ digest }: { digest: Digest }) {
                 y={padding.top + innerH - offshoreH}
                 width={barWidth}
                 height={offshoreH}
-                fill="#2f6f6b"
-                rx="2"
+                fill="#c9a55c"
+                rx="3"
               />
               {/* Total on top */}
               {total > 0 && (
@@ -98,16 +96,16 @@ export function Headcount({ digest }: { digest: Digest }) {
         })}
       </svg>
 
-      <div className="mt-2 flex items-center gap-4 text-xs text-slate">
+      <div className="mt-2 flex items-center gap-4 text-[10px] text-slate">
         <div className="flex items-center gap-1">
-          <div className="h-3 w-3 rounded-sm bg-accent" />
+          <div className="h-2.5 w-2.5 rounded-sm bg-gold" />
           <span>Offshore</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="h-3 w-3 rounded-sm bg-slate/40" />
+          <div className="h-2.5 w-2.5 rounded-sm bg-gray-200" />
           <span>Onshore</span>
         </div>
       </div>
-    </section>
+    </div>
   )
 }
