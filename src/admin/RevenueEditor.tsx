@@ -2,7 +2,7 @@ import { t } from '@/i18n'
 import { useDigest } from '@/lib/context'
 import { totalRevenue } from '@/lib/compute/totals'
 import { formatAmount, generateId } from '@/lib/utils'
-import type { Project } from '@/lib/schema'
+import type { Project, PurchaseOrder } from '@/lib/schema'
 
 export function RevenueEditor() {
   const { digest, updateDigest } = useDigest()
@@ -10,13 +10,25 @@ export function RevenueEditor() {
   const total = totalRevenue(projects)
 
   const addProject = () => {
+    const projectId = generateId('prj')
     const newProject: Project = {
-      id: generateId('prj'),
+      id: projectId,
       name: '',
       active: true,
       revenue: 0,
     }
-    updateDigest(d => ({ ...d, projects: [...d.projects, newProject] }))
+    const newPo: PurchaseOrder = {
+      projectId,
+      label: '',
+      poRequested: 0,
+      delivered: 0,
+      poReceived: 0,
+    }
+    updateDigest(d => ({
+      ...d,
+      projects: [...d.projects, newProject],
+      purchaseOrders: [...d.purchaseOrders, newPo],
+    }))
   }
 
   const updateProject = (id: string, field: keyof Project, value: any) => {
@@ -28,7 +40,11 @@ export function RevenueEditor() {
 
   const deleteProject = (id: string) => {
     if (!confirm(t.admin.confirmDelete)) return
-    updateDigest(d => ({ ...d, projects: d.projects.filter(p => p.id !== id) }))
+    updateDigest(d => ({
+      ...d,
+      projects: d.projects.filter(p => p.id !== id),
+      purchaseOrders: d.purchaseOrders.filter(po => po.projectId !== id),
+    }))
   }
 
   return (
