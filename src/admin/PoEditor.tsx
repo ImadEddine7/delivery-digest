@@ -67,7 +67,7 @@ export function PoEditor() {
                 <h3 className="font-medium text-ink">{project.name || '(sans nom)'}</h3>
                 <span className="text-xs text-slate">
                   CA : {formatAmount(project.revenue, digest.meta.unit)}
-                  {' '} — PO demandé : {formatAmount(projectPoTotal, digest.meta.unit)}
+                  {' '} — PO total : {formatAmount(projectPoTotal, digest.meta.unit)}
                   {projectMismatch && <span className="ml-2 text-warning">⚠ écart</span>}
                 </span>
               </div>
@@ -80,73 +80,63 @@ export function PoEditor() {
               <p className="text-xs text-slate/60">Aucun PO. Cliquez sur "+ Ventiler" pour ajouter une ligne.</p>
             )}
 
-            {projectPos.length > 0 && (
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-slate/10">
-                    <th className="pb-1 text-left text-xs font-medium text-slate">Label</th>
-                    <th className="pb-1 text-right text-xs font-medium text-slate">PO demandé</th>
-                    <th className="pb-1 text-right text-xs font-medium text-slate">Délivré</th>
-                    <th className="pb-1 text-right text-xs font-medium text-slate">PO reçu</th>
-                    <th className="pb-1 text-right text-xs font-medium text-slate">Couverture</th>
-                    <th className="pb-1 text-xs"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {projectPos.map(po => {
-                    const cov = coverage(po)
-                    const status = coverageStatus(cov, digest.settings.coverageThresholds)
-                    return (
-                      <tr key={po._idx} className="border-b border-slate/5">
-                        <td className="py-1">
-                          <input
-                            className="input-field w-full"
-                            value={po.label}
-                            onChange={e => updatePo(po._idx, 'label', e.target.value)}
-                            placeholder="ex: PO Q1, add-on..."
-                          />
-                        </td>
-                        <td className="py-1">
-                          <input
-                            type="number"
-                            className="input-field w-24 text-right font-mono"
-                            value={po.poRequested}
-                            onChange={e => updatePo(po._idx, 'poRequested', parseFloat(e.target.value) || 0)}
-                          />
-                        </td>
-                        <td className="py-1">
-                          <input
-                            type="number"
-                            className="input-field w-24 text-right font-mono"
-                            value={po.delivered}
-                            onChange={e => updatePo(po._idx, 'delivered', parseFloat(e.target.value) || 0)}
-                          />
-                        </td>
-                        <td className="py-1">
-                          <input
-                            type="number"
-                            className="input-field w-24 text-right font-mono"
-                            value={po.poReceived}
-                            onChange={e => updatePo(po._idx, 'poReceived', parseFloat(e.target.value) || 0)}
-                          />
-                        </td>
-                        <td className={`py-1 text-right font-mono text-xs font-bold coverage-${status}`}>
-                          {formatPct(cov)}
-                        </td>
-                        <td className="py-1 text-center">
-                          <button
-                            onClick={() => deletePo(po._idx)}
-                            className="text-xs text-danger"
-                          >
-                            ✕
-                          </button>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            )}
+            {projectPos.map(po => {
+              const cov = coverage(po)
+              const status = coverageStatus(cov, digest.settings.coverageThresholds)
+              return (
+                <div key={po._idx} className="mb-2 flex items-center gap-3 rounded border border-slate/5 bg-mist/30 px-3 py-2">
+                  <div className="flex flex-1 items-center gap-3">
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[10px] text-slate/60">PO demandé</label>
+                      <input
+                        type="number"
+                        className="input-field w-24 text-right font-mono"
+                        value={po.poRequested}
+                        onChange={e => updatePo(po._idx, 'poRequested', parseFloat(e.target.value) || 0)}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[10px] text-slate/60">Délivré</label>
+                      <input
+                        type="number"
+                        className="input-field w-24 text-right font-mono"
+                        value={po.delivered}
+                        onChange={e => updatePo(po._idx, 'delivered', parseFloat(e.target.value) || 0)}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[10px] text-slate/60">PO reçu</label>
+                      <input
+                        type="number"
+                        className="input-field w-24 text-right font-mono"
+                        value={po.poReceived}
+                        onChange={e => updatePo(po._idx, 'poReceived', parseFloat(e.target.value) || 0)}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[10px] text-slate/60">Couverture</label>
+                      <span className={`text-sm font-mono font-bold coverage-${status}`}>
+                        {formatPct(cov)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      className="input-field w-28 text-xs"
+                      value={po.label}
+                      onChange={e => updatePo(po._idx, 'label', e.target.value)}
+                      placeholder="label (optionnel)"
+                    />
+                    <button
+                      onClick={() => deletePo(po._idx)}
+                      className="text-xs text-danger"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         )
       })}
