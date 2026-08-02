@@ -24,9 +24,11 @@ interface DigestContextType {
 
 const DigestContext = createContext<DigestContextType | null>(null)
 
-async function fetchFromPages(period: string): Promise<Digest | null> {
+const RAW_BASE = 'https://raw.githubusercontent.com/ImadEddine7/delivery-digest/main'
+
+async function fetchFromRepo(period: string): Promise<Digest | null> {
   try {
-    const res = await fetch(`${BASE}data/digests/${period}.json`)
+    const res = await fetch(`${RAW_BASE}/data/digests/${period}.json`, { cache: 'no-cache' })
     if (!res.ok) return null
     const json = await res.json()
     return DigestSchema.parse(json)
@@ -82,8 +84,8 @@ export function DigestProvider({ children }: { children: ReactNode }) {
         }
       }
 
-      // 3. Fetch from static files (GitHub Pages serves /data/)
-      const fromPages = await fetchFromPages(p)
+      // 3. Fetch from GitHub raw (always up-to-date with main branch)
+      const fromPages = await fetchFromRepo(p)
       if (fromPages) {
         setDigestRaw(fromPages)
         setPeriodRaw(p)
