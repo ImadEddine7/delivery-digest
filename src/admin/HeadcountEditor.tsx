@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useDigest } from '@/lib/context'
 import { monthLabel } from '@/lib/utils'
 import type { HeadcountEntry } from '@/lib/schema'
@@ -5,21 +6,15 @@ import type { HeadcountEntry } from '@/lib/schema'
 export function HeadcountEditor() {
   const { digest, updateDigest } = useDigest()
   const data = [...digest.headcount].sort((a, b) => a.month.localeCompare(b.month))
+  const [monthToAdd, setMonthToAdd] = useState('')
 
   const addMonth = () => {
-    const last = data[data.length - 1]
-    let nextMonth: string
-    if (last) {
-      const [y, m] = last.month.split('-').map(Number)
-      const nm = m === 12 ? 1 : m + 1
-      const ny = m === 12 ? y + 1 : y
-      nextMonth = `${ny}-${String(nm).padStart(2, '0')}`
-    } else {
-      const now = new Date()
-      nextMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
-    }
-    const entry: HeadcountEntry = { month: nextMonth, offshore: 0, onshore: 0 }
+    if (!monthToAdd) return
+    const exists = digest.headcount.some(h => h.month === monthToAdd)
+    if (exists) return
+    const entry: HeadcountEntry = { month: monthToAdd, offshore: 0, onshore: 0 }
     updateDigest(d => ({ ...d, headcount: [...d.headcount, entry] }))
+    setMonthToAdd('')
   }
 
   const updateEntry = (month: string, field: 'offshore' | 'onshore', value: number) => {
@@ -40,9 +35,17 @@ export function HeadcountEditor() {
     <div>
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-bold">Effectifs (headcount)</h2>
-        <button onClick={addMonth} className="btn-primary text-sm">
-          + Ajouter un mois
-        </button>
+        <div className="flex items-center gap-2">
+          <input
+            type="month"
+            className="input-field text-sm"
+            value={monthToAdd}
+            onChange={e => setMonthToAdd(e.target.value)}
+          />
+          <button onClick={addMonth} className="btn-primary text-sm" disabled={!monthToAdd}>
+            + Ajouter
+          </button>
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
