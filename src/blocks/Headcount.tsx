@@ -1,4 +1,3 @@
-import { t } from '@/i18n'
 import { monthLabel } from '@/lib/utils'
 import type { Digest } from '@/lib/schema'
 
@@ -7,42 +6,43 @@ export function Headcount({ digest }: { digest: Digest }) {
 
   if (data.length === 0) return null
 
-  const max = Math.max(...data.map(d => d.count))
-  const min = Math.min(...data.map(d => d.count))
-  const range = max - min || 1
+  const totals = data.map(d => d.offshore + d.onshore)
+  const max = Math.max(...totals)
+  const lastEntry = data[data.length - 1]
+  const lastTotal = lastEntry.offshore + lastEntry.onshore
+  const lastRatio = lastTotal > 0 ? ((lastEntry.offshore / lastTotal) * 100).toFixed(1) : '—'
 
-  const chartHeight = 160
+  const chartHeight = 180
   const chartWidth = 600
   const padding = { top: 20, right: 20, bottom: 30, left: 40 }
   const innerW = chartWidth - padding.left - padding.right
   const innerH = chartHeight - padding.top - padding.bottom
 
-  const points = data.map((d, i) => ({
-    x: padding.left + (i / Math.max(data.length - 1, 1)) * innerW,
-    y: padding.top + innerH - ((d.count - min) / range) * innerH,
-    ...d,
-  }))
-
-  const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')
-  const areaPath = `${linePath} L ${points[points.length - 1].x} ${padding.top + innerH} L ${points[0].x} ${padding.top + innerH} Z`
+  const barWidth = data.length > 0 ? Math.min(40, (innerW / data.length) * 0.7) : 40
+  const barGap = data.length > 0 ? innerW / data.length : 0
 
   return (
     <section className="mb-10">
       <h2 className="mb-4 text-xl font-bold text-ink">Effectifs</h2>
-      <div className="flex items-baseline gap-3 mb-4">
-        <span className="text-3xl font-bold text-ink">{data[data.length - 1].count}</span>
-        <span className="text-sm text-slate">personnes ({monthLabel(data[data.length - 1].month)})</span>
-        {data.length > 1 && (
-          <span className={`text-sm font-medium ${data[data.length - 1].count >= data[data.length - 2].count ? 'text-success' : 'text-danger'}`}>
-            {data[data.length - 1].count >= data[data.length - 2].count ? '+' : ''}{data[data.length - 1].count - data[data.length - 2].count} vs mois précédent
-          </span>
-        )}
+      <div className="mb-4 flex flex-wrap items-baseline gap-6">
+        <div>
+          <span className="text-3xl font-bold text-ink">{lastTotal}</span>
+          <span className="ml-2 text-sm text-slate">personnes</span>
+        </div>
+        <div className="text-sm">
+          <span className="font-medium text-accent">{lastEntry.offshore} offshore</span>
+          <span className="mx-2 text-slate/40">|</span>
+          <span className="font-medium text-slate">{lastEntry.onshore} onshore</span>
+          <span className="mx-2 text-slate/40">|</span>
+          <span className="font-medium text-ink">{lastRatio}% offshore</span>
+        </div>
       </div>
+
       <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full max-w-[600px]" preserveAspectRatio="xMidYMid meet">
-        {/* Grid lines */}
+        {/* Y-axis grid */}
         {[0, 0.25, 0.5, 0.75, 1].map(pct => {
           const y = padding.top + innerH - pct * innerH
-          const val = Math.round(min + pct * range)
+          const val = Math.round(pct * max)
           return (
             <g key={pct}>
               <line x1={padding.left} x2={padding.left + innerW} y1={y} y2={y} stroke="#e5e7eb" strokeWidth="0.5" />
@@ -51,29 +51,63 @@ export function Headcount({ digest }: { digest: Digest }) {
           )
         })}
 
-        {/* Area */}
-        <path d={areaPath} fill="url(#headcount-gradient)" opacity="0.3" />
+        {/* Stacked bars */}
+        {data.map((d, i) => {
+          const total = d.offshore + d.onshore
+          const offshoreH = max > 0 ? (d.offshore / max) * innerH : 0
+          const onshoreH = max > 0 ? (d.onshore / max) * innerH : 0
+          const x = padding.left + i * barGap + (barGap - barWidth) / 2
 
-        {/* Line */}
-        <path d={linePath} fill="none" stroke="#2f6f6b" strokeWidth="2" strokeLinejoin="round" />
-
-        {/* Points */}
-        {points.map((p, i) => (
-          <g key={i}>
-            <circle cx={p.x} cy={p.y} r="3" fill="#2f6f6b" />
-            <text x={p.x} y={padding.top + innerH + 15} textAnchor="middle" className="text-[8px] fill-slate/60">
-              {p.month.slice(5)}
-            </text>
-          </g>
-        ))}
-
-        <defs>
-          <linearGradient id="headcount-gradient" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="#2f6f6b" />
-            <stop offset="100%" stopColor="#2f6f6b" stopOpacity="0" />
-          </linearGradient>
-        </defs>
+          return (
+            <g key={d.month}>
+              {/* Onshore (bottom) */}
+              <rect
+                x={x}
+                y={padding.top + innerH - onshoreH - offshoreH}
+                width={barWidth}
+                height={onshoreH}
+                fill="#94a3b8"
+                rx="2"
+              />
+              {/* Offshore (top) */}
+              <rect
+                x={x}
+                y={padding.top + innerH - offshoreH}
+                width={barWidth}
+                height={offshoreH}
+                fill="#2f6f6b"
+                rx="2"
+              />
+              {/* Total on top */}
+              {total > 0 && (
+                <text
+                  x={x + barWidth / 2}
+                  y={padding.top + innerH - onshoreH - offshoreH - 4}
+                  textAnchor="middle"
+                  className="text-[9px] fill-ink font-medium"
+                >
+                  {total}
+                </text>
+              )}
+              {/* Month label */}
+              <text x={x + barWidth / 2} y={padding.top + innerH + 14} textAnchor="middle" className="text-[9px] fill-slate/60">
+                {d.month.slice(5)}
+              </text>
+            </g>
+          )
+        })}
       </svg>
+
+      <div className="mt-2 flex items-center gap-4 text-xs text-slate">
+        <div className="flex items-center gap-1">
+          <div className="h-3 w-3 rounded-sm bg-accent" />
+          <span>Offshore</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="h-3 w-3 rounded-sm bg-slate/40" />
+          <span>Onshore</span>
+        </div>
+      </div>
     </section>
   )
 }

@@ -32,14 +32,16 @@ export function HeaderStrip({ digest }: { digest: Digest }) {
           <span className="text-xs font-medium text-slate">{t.header.projects}</span>
           <span className="text-xl font-bold text-ink">{kpis.activeCount}</span>
         </div>
-        {digest.headcount.length > 0 && (
-          <div className="kpi-chip">
-            <span className="text-xs font-medium text-slate">Effectifs</span>
-            <span className="text-xl font-bold text-ink">
-              {digest.headcount.sort((a, b) => b.month.localeCompare(a.month))[0].count}
-            </span>
-          </div>
-        )}
+        {digest.headcount.length > 0 && (() => {
+          const last = [...digest.headcount].sort((a, b) => b.month.localeCompare(a.month))[0]
+          const total = last.offshore + last.onshore
+          return (
+            <div className="kpi-chip">
+              <span className="text-xs font-medium text-slate">Effectifs</span>
+              <span className="text-xl font-bold text-ink">{total}</span>
+            </div>
+          )
+        })()}
       </div>
     </header>
   )

@@ -18,14 +18,14 @@ export function HeadcountEditor() {
       const now = new Date()
       nextMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
     }
-    const entry: HeadcountEntry = { month: nextMonth, count: last?.count || 0 }
+    const entry: HeadcountEntry = { month: nextMonth, offshore: 0, onshore: 0 }
     updateDigest(d => ({ ...d, headcount: [...d.headcount, entry] }))
   }
 
-  const updateEntry = (month: string, count: number) => {
+  const updateEntry = (month: string, field: 'offshore' | 'onshore', value: number) => {
     updateDigest(d => ({
       ...d,
-      headcount: d.headcount.map(h => h.month === month ? { ...h, count } : h),
+      headcount: d.headcount.map(h => h.month === month ? { ...h, [field]: value } : h),
     }))
   }
 
@@ -44,39 +44,56 @@ export function HeadcountEditor() {
           + Ajouter un mois
         </button>
       </div>
-      <p className="mb-4 text-sm text-slate">Nombre de personnes par mois. Le digest affichera le graphe d'évolution.</p>
       <div className="overflow-x-auto">
-        <table className="w-full max-w-md text-sm">
+        <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-slate/10">
-              <th className="pb-2 text-left text-xs font-medium text-slate">Mois</th>
-              <th className="pb-2 text-right text-xs font-medium text-slate">Personnes</th>
-              <th className="pb-2 text-xs"></th>
+              <th className="w-32 pb-2 text-left text-xs font-medium text-slate">Mois</th>
+              <th className="w-24 pb-2 text-right text-xs font-medium text-slate">Offshore</th>
+              <th className="w-24 pb-2 text-right text-xs font-medium text-slate">Onshore</th>
+              <th className="w-24 pb-2 text-right text-xs font-medium text-slate">Total</th>
+              <th className="w-24 pb-2 text-right text-xs font-medium text-slate">% Offshore</th>
+              <th className="w-10 pb-2"></th>
             </tr>
           </thead>
           <tbody>
-            {data.map(entry => (
-              <tr key={entry.month} className="border-b border-slate/5">
-                <td className="py-1.5 text-slate">{monthLabel(entry.month)}</td>
-                <td className="py-1.5">
-                  <input
-                    type="number"
-                    className="input-field w-24 text-right font-mono"
-                    value={entry.count}
-                    onChange={e => updateEntry(entry.month, parseInt(e.target.value) || 0)}
-                    min="0"
-                  />
-                </td>
-                <td className="py-1.5 text-center">
-                  <button
-                    onClick={() => deleteEntry(entry.month)}
-                    className="text-xs text-danger hover:underline"
-                  >
-                    ✕
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {data.map(entry => {
+              const total = entry.offshore + entry.onshore
+              const ratio = total > 0 ? ((entry.offshore / total) * 100).toFixed(1) : '—'
+              return (
+                <tr key={entry.month} className="border-b border-slate/5">
+                  <td className="py-1.5 text-sm text-slate">{monthLabel(entry.month)}</td>
+                  <td className="py-1.5">
+                    <input
+                      type="number"
+                      className="input-field w-20 text-right font-mono"
+                      value={entry.offshore}
+                      onChange={e => updateEntry(entry.month, 'offshore', parseInt(e.target.value) || 0)}
+                      min="0"
+                    />
+                  </td>
+                  <td className="py-1.5">
+                    <input
+                      type="number"
+                      className="input-field w-20 text-right font-mono"
+                      value={entry.onshore}
+                      onChange={e => updateEntry(entry.month, 'onshore', parseInt(e.target.value) || 0)}
+                      min="0"
+                    />
+                  </td>
+                  <td className="py-1.5 text-right font-mono font-bold">{total}</td>
+                  <td className="py-1.5 text-right font-mono text-sm">{ratio}{ratio !== '—' && '%'}</td>
+                  <td className="py-1.5 text-center">
+                    <button
+                      onClick={() => deleteEntry(entry.month)}
+                      className="text-xs text-danger hover:underline"
+                    >
+                      ✕
+                    </button>
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>

@@ -1,7 +1,10 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
 import type { Digest } from './schema'
+import { DigestSchema } from './schema'
 import { getStorage, isGitHubMode } from './storage'
 import { createEmptyDigest, currentPeriod } from './utils'
+
+const BASE = import.meta.env.BASE_URL
 
 interface DigestContextType {
   digest: Digest
@@ -20,6 +23,17 @@ interface DigestContextType {
 }
 
 const DigestContext = createContext<DigestContextType | null>(null)
+
+async function fetchFromPages(period: string): Promise<Digest | null> {
+  try {
+    const res = await fetch(`${BASE}data/digests/${period}.json`)
+    if (!res.ok) return null
+    const json = await res.json()
+    return DigestSchema.parse(json)
+  } catch {
+    return null
+  }
+}
 
 export function DigestProvider({ children }: { children: ReactNode }) {
   const [digest, setDigestRaw] = useState<Digest>(() => createEmptyDigest(currentPeriod()))
@@ -47,6 +61,7 @@ export function DigestProvider({ children }: { children: ReactNode }) {
 
   const loadPeriod = useCallback(async (p: string) => {
     try {
+      // 1. Check local draft first
       const draft = localStorage.getItem(`delivery-digest:draft:${p}`)
       if (draft) {
         setDigestRaw(JSON.parse(draft))
@@ -54,16 +69,32 @@ export function DigestProvider({ children }: { children: ReactNode }) {
         setDirty(true)
         return
       }
-      const storage = getStorage()
-      const loaded = await storage.load(p)
-      if (loaded) {
-        setDigestRaw(loaded)
-        setDirty(false)
-      } else {
-        setDigestRaw(createEmptyDigest(p))
-        setDirty(false)
+
+      // 2. If GitHub mode, use API
+      if (isGitHubMode()) {
+        const storage = getStorage()
+        const loaded = await storage.load(p)
+        if (loaded) {
+          setDigestRaw(loaded)
+          setPeriodRaw(p)
+          setDirty(false)
+          return
+        }
       }
+
+      // 3. Fetch from static files (GitHub Pages serves /data/)
+      const fromPages = await fetchFromPages(p)
+      if (fromPages) {
+        setDigestRaw(fromPages)
+        setPeriodRaw(p)
+        setDirty(false)
+        return
+      }
+
+      // 4. Nothing found, create empty
+      setDigestRaw(createEmptyDigest(p))
       setPeriodRaw(p)
+      setDirty(false)
     } catch (e: any) {
       if (e.message === 'TOKEN_INVALID') {
         setError('TOKEN_INVALID')

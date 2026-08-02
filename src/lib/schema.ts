@@ -67,7 +67,8 @@ export const PlanningSchema = z.object({
 
 export const HeadcountEntrySchema = z.object({
   month: z.string(),
-  count: z.number(),
+  offshore: z.number().default(0),
+  onshore: z.number().default(0),
 })
 
 export const SettingsSchema = z.object({
