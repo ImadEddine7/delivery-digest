@@ -48,11 +48,11 @@ export function HeadcountEditor() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-slate/10">
-              <th className="w-32 pb-2 text-left text-xs font-medium text-slate">Mois</th>
-              <th className="w-24 pb-2 text-right text-xs font-medium text-slate">Offshore</th>
-              <th className="w-24 pb-2 text-right text-xs font-medium text-slate">Onshore</th>
-              <th className="w-24 pb-2 text-right text-xs font-medium text-slate">Total</th>
-              <th className="w-24 pb-2 text-right text-xs font-medium text-slate">% Offshore</th>
+              <th className="pb-2 text-left text-xs font-medium text-slate">Mois</th>
+              <th className="pb-2 text-left text-xs font-medium text-slate">Offshore</th>
+              <th className="pb-2 text-left text-xs font-medium text-slate">Onshore</th>
+              <th className="pb-2 text-left text-xs font-medium text-slate">Total</th>
+              <th className="pb-2 text-left text-xs font-medium text-slate">% Offshore</th>
               <th className="w-10 pb-2"></th>
             </tr>
           </thead>
@@ -62,27 +62,27 @@ export function HeadcountEditor() {
               const ratio = total > 0 ? ((entry.offshore / total) * 100).toFixed(1) : '—'
               return (
                 <tr key={entry.month} className="border-b border-slate/5">
-                  <td className="py-1.5 text-sm text-slate">{monthLabel(entry.month)}</td>
-                  <td className="py-1.5">
+                  <td className="py-1.5 pr-4 text-sm text-slate">{monthLabel(entry.month)}</td>
+                  <td className="py-1.5 pr-4">
                     <input
                       type="number"
-                      className="input-field w-20 text-right font-mono"
+                      className="input-field w-20 font-mono"
                       value={entry.offshore}
                       onChange={e => updateEntry(entry.month, 'offshore', parseInt(e.target.value) || 0)}
                       min="0"
                     />
                   </td>
-                  <td className="py-1.5">
+                  <td className="py-1.5 pr-4">
                     <input
                       type="number"
-                      className="input-field w-20 text-right font-mono"
+                      className="input-field w-20 font-mono"
                       value={entry.onshore}
                       onChange={e => updateEntry(entry.month, 'onshore', parseInt(e.target.value) || 0)}
                       min="0"
                     />
                   </td>
-                  <td className="py-1.5 text-right font-mono font-bold">{total}</td>
-                  <td className="py-1.5 text-right font-mono text-sm">{ratio}{ratio !== '—' && '%'}</td>
+                  <td className="py-1.5 pr-4 font-mono font-bold">{total}</td>
+                  <td className="py-1.5 pr-4 font-mono text-sm">{ratio}{ratio !== '—' && '%'}</td>
                   <td className="py-1.5 text-center">
                     <button
                       onClick={() => deleteEntry(entry.month)}
