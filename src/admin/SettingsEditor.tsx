@@ -8,8 +8,8 @@ export function SettingsEditor() {
   const existingConfig = loadGitHubConfig()
 
   const [token, setToken] = useState(existingConfig?.token || '')
-  const [owner, setOwner] = useState(existingConfig?.owner || '')
-  const [repo, setRepo] = useState(existingConfig?.repo || '')
+  const [owner, setOwner] = useState(existingConfig?.owner || 'ImadEddine7')
+  const [repo, setRepo] = useState(existingConfig?.repo || 'delivery-digest')
   const [branch, setBranch] = useState(existingConfig?.branch || 'main')
   const [persist, setPersist] = useState(false)
 

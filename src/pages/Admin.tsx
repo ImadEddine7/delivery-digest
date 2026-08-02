@@ -135,6 +135,35 @@ export function AdminPage() {
           </div>
         )}
 
+        {dirty && (
+          <div className="mb-4 flex items-center gap-3 rounded-lg border border-warning/30 bg-warning/5 px-4 py-3">
+            <span className="text-sm text-warning font-medium">Modifications non enregistrées</span>
+            <button
+              onClick={saveToGitHub}
+              disabled={saving}
+              className="btn-primary ml-auto text-sm"
+            >
+              {saving ? 'Publication…' : 'Publier'}
+            </button>
+          </div>
+        )}
+
+        {!dirty && lastSaved && (
+          <div className="mb-4 flex items-center gap-3 rounded-lg border border-success/20 bg-success/5 px-4 py-3">
+            <span className="text-sm text-success font-medium">
+              Enregistré · {lastSaved.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+            </span>
+          </div>
+        )}
+
+        {!githubMode && dirty && (
+          <div className="mb-4 rounded-lg border border-danger/20 bg-danger/5 p-3 text-sm">
+            <span className="font-medium text-danger">
+              GitHub non configuré — allez dans Paramètres pour connecter votre repo.
+            </span>
+          </div>
+        )}
+
         {tab === 'revenue' && <RevenueEditor />}
         {tab === 'po' && <PoEditor />}
         {tab === 'headcount' && <HeadcountEditor />}
