@@ -6,8 +6,6 @@ export const ProjectSchema = z.object({
   program: z.string().optional(),
   active: z.boolean().default(true),
   revenue: z.number(),
-  offshorePct: z.number().min(0).max(100),
-  comment: z.string().default(''),
 })
 
 export const PurchaseOrderSchema = z.object({

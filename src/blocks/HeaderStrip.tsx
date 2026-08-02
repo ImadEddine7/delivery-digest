@@ -29,13 +29,17 @@ export function HeaderStrip({ digest }: { digest: Digest }) {
           </span>
         </div>
         <div className="kpi-chip">
-          <span className="text-xs font-medium text-slate">{t.header.offshore}</span>
-          <span className="text-xl font-bold text-ink">{formatPctRaw(kpis.offshore)}</span>
-        </div>
-        <div className="kpi-chip">
           <span className="text-xs font-medium text-slate">{t.header.projects}</span>
           <span className="text-xl font-bold text-ink">{kpis.activeCount}</span>
         </div>
+        {digest.headcount.length > 0 && (
+          <div className="kpi-chip">
+            <span className="text-xs font-medium text-slate">Effectifs</span>
+            <span className="text-xl font-bold text-ink">
+              {digest.headcount.sort((a, b) => b.month.localeCompare(a.month))[0].count}
+            </span>
+          </div>
+        )}
       </div>
     </header>
   )

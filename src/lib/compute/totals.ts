@@ -4,13 +4,6 @@ export function totalRevenue(projects: Project[]): number {
   return projects.filter(p => p.active).reduce((sum, p) => sum + p.revenue, 0)
 }
 
-export function globalOffshorePct(projects: Project[]): number {
-  const active = projects.filter(p => p.active)
-  const totalRev = active.reduce((sum, p) => sum + p.revenue, 0)
-  if (totalRev === 0) return 0
-  return active.reduce((sum, p) => sum + p.revenue * p.offshorePct, 0) / totalRev
-}
-
 export function coverage(po: PurchaseOrder): number | null {
   if (po.delivered === 0) return null
   return po.poReceived / po.delivered
@@ -49,28 +42,11 @@ export function revenueShare(project: Project, total: number): number {
   return project.revenue / total
 }
 
-export interface DeltaResult {
-  value: number
-  pct: number
-}
-
-export function deltaVsPrevious(
-  current: number,
-  previous: number | undefined
-): DeltaResult | null {
-  if (previous === undefined || previous === 0) return null
-  return {
-    value: current - previous,
-    pct: ((current - previous) / previous) * 100,
-  }
-}
-
 export function computeKpis(digest: Digest) {
   const revenue = totalRevenue(digest.projects)
-  const offshore = globalOffshorePct(digest.projects)
   const cov = globalCoverage(digest.purchaseOrders)
   const activeCount = activeProjectCount(digest.projects)
   const uncovered = uncoveredExposure(digest.purchaseOrders)
 
-  return { revenue, offshore, coverage: cov, activeCount, uncovered }
+  return { revenue, coverage: cov, activeCount, uncovered }
 }

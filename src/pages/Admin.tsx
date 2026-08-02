@@ -12,7 +12,6 @@ import { SettingsEditor } from '@/admin/SettingsEditor'
 import { PublishPanel } from '@/admin/PublishPanel'
 import { HeaderStrip } from '@/blocks/HeaderStrip'
 import { Revenue } from '@/blocks/Revenue'
-import { OffshoreRatio } from '@/blocks/OffshoreRatio'
 import { PoCoverage } from '@/blocks/PoCoverage'
 import { KeyMessages } from '@/blocks/KeyMessages'
 import { Planning } from '@/blocks/Planning'
@@ -61,7 +60,6 @@ export function AdminPage() {
         <div className="mx-auto max-w-5xl px-4 py-8">
           <HeaderStrip digest={digest} />
           <Revenue digest={digest} />
-          <OffshoreRatio digest={digest} />
           <PoCoverage digest={digest} />
           <Headcount digest={digest} />
           <KeyMessages digest={digest} />

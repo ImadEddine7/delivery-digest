@@ -10,11 +10,11 @@
     "status": "published"
   },
   "projects": [
-    { "id": "prj-001", "name": "Procurement Analytics", "program": "GET", "active": true, "revenue": 420.5, "offshorePct": 60, "comment": "" },
-    { "id": "prj-002", "name": "Energy Trading Platform", "program": "GET", "active": true, "revenue": 310.0, "offshorePct": 45, "comment": "" },
-    { "id": "prj-003", "name": "HR Data Lake", "program": "DRH", "active": true, "revenue": 180.0, "offshorePct": 70, "comment": "" },
-    { "id": "prj-004", "name": "Carbon Reporting", "program": "RSE", "active": true, "revenue": 95.0, "offshorePct": 30, "comment": "" },
-    { "id": "prj-005", "name": "Supply Chain Dashboard", "program": "GET", "active": true, "revenue": 250.0, "offshorePct": 55, "comment": "" }
+    { "id": "prj-001", "name": "Procurement Analytics", "active": true, "revenue": 420.5 },
+    { "id": "prj-002", "name": "Energy Trading Platform", "active": true, "revenue": 310.0 },
+    { "id": "prj-003", "name": "HR Data Lake", "active": true, "revenue": 180.0 },
+    { "id": "prj-004", "name": "Carbon Reporting", "active": true, "revenue": 95.0 },
+    { "id": "prj-005", "name": "Supply Chain Dashboard", "active": true, "revenue": 250.0 }
   ],
   "purchaseOrders": [
     { "projectId": "prj-001", "label": "", "poRequested": 500, "delivered": 430, "poReceived": 420 },
