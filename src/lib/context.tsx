@@ -61,7 +61,7 @@ export function DigestProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
-  const loadPeriod = useCallback(async (p: string) => {
+  const loadPeriod = useCallback(async (p: string, fallback = true) => {
     try {
       // 1. Check local draft first
       const draft = localStorage.getItem(`delivery-digest:draft:${p}`)
@@ -85,15 +85,24 @@ export function DigestProvider({ children }: { children: ReactNode }) {
       }
 
       // 3. Fetch from GitHub raw (always up-to-date with main branch)
-      const fromPages = await fetchFromRepo(p)
-      if (fromPages) {
-        setDigestRaw(fromPages)
+      const fromRepo = await fetchFromRepo(p)
+      if (fromRepo) {
+        setDigestRaw(fromRepo)
         setPeriodRaw(p)
         setDirty(false)
         return
       }
 
-      // 4. Nothing found, create empty
+      // 4. Fallback: try previous month (only on initial load)
+      if (fallback) {
+        const [y, m] = p.split('-').map(Number)
+        const pm = m === 1 ? 12 : m - 1
+        const py = m === 1 ? y - 1 : y
+        const prev = `${py}-${String(pm).padStart(2, '0')}`
+        return loadPeriod(prev, false)
+      }
+
+      // 5. Nothing found, create empty
       setDigestRaw(createEmptyDigest(p))
       setPeriodRaw(p)
       setDirty(false)
@@ -136,34 +145,7 @@ export function DigestProvider({ children }: { children: ReactNode }) {
   const clearError = useCallback(() => setError(null), [])
 
   useEffect(() => {
-    async function init() {
-      const p = currentPeriod()
-      // Try current month first
-      const draft = localStorage.getItem(`delivery-digest:draft:${p}`)
-      if (draft || isGitHubMode()) {
-        loadPeriod(p)
-        return
-      }
-      const data = await fetchFromRepo(p)
-      if (data) {
-        setDigestRaw(data)
-        setPeriodRaw(p)
-        return
-      }
-      // Fallback: try previous month
-      const [y, m] = p.split('-').map(Number)
-      const pm = m === 1 ? 12 : m - 1
-      const py = m === 1 ? y - 1 : y
-      const prev = `${py}-${String(pm).padStart(2, '0')}`
-      const prevData = await fetchFromRepo(prev)
-      if (prevData) {
-        setDigestRaw(prevData)
-        setPeriodRaw(prev)
-        return
-      }
-      loadPeriod(p)
-    }
-    init()
+    loadPeriod(period)
   }, [])
 
   return (
