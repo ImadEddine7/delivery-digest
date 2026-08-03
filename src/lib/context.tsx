@@ -24,11 +24,13 @@ interface DigestContextType {
 
 const DigestContext = createContext<DigestContextType | null>(null)
 
-const RAW_BASE = 'https://raw.githubusercontent.com/ImadEddine7/delivery-digest/main'
+const API_BASE = 'https://api.github.com/repos/ImadEddine7/delivery-digest/contents'
 
 async function fetchFromRepo(period: string): Promise<Digest | null> {
   try {
-    const res = await fetch(`${RAW_BASE}/data/digests/${period}.json`, { cache: 'no-cache' })
+    const res = await fetch(`${API_BASE}/data/digests/${period}.json?ref=main`, {
+      headers: { Accept: 'application/vnd.github.raw' },
+    })
     if (!res.ok) return null
     const json = await res.json()
     return DigestSchema.parse(json)
